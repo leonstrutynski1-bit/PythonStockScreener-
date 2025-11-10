@@ -23,11 +23,46 @@ else:
 
     returns = close_prices.dropna(how = 'all')
 
+    # Analyze financial ratios for each stock in the top 15 NASDAQ tech stocks, and compare it with the chosen stock
+    # Going to focus on Gross Margin, Operating Margin, Return on Assets, Return on Equity and Trailing P/E Ratio
+    ratio = {}
+    for i in tickers_15_NQ:
+        stock = yf.Ticker(i)
+        info = stock.info
+
+        ratio[i] = {
+            'Gross Margins': info.get('grossMargins'),
+            'Operating Margins': info.get('operatingMargins'),
+            'Return On Assets': info.get('returnOnAssets'),
+            'Return On Equity': info.get('returnOnEquity'),
+            'Trailing PE': info.get('trailingPE')
+        }
+        ratio_graph = pd.DataFrame(ratio).T
+
+    ratio_chosen_stock = {}
+    stock_chosen_ratio = yf.Ticker(chosen_stock)
+    info_chosen = stock_chosen_ratio.info
+    ratio_chosen_stock[chosen_stock] = {
+        'Gross Margins': info_chosen.get('grossMargins'),
+        'Operating Margins': info_chosen.get('operatingMargins'),
+        'Return On Assets': info_chosen.get('returnOnAssets'),
+        'Return On Equity': info_chosen.get('returnOnEquity'),
+        'Trailing PE': info_chosen.get('trailingPE')
+    }
+    ratio_graph_chosen_stock = pd.DataFrame(ratio_chosen_stock).T
+
+    print(ratio_graph)
+    print(ratio_graph_chosen_stock)
+
+    
+
     stock_graph = returns.plot(figsize=(14, 8), lw=1)
     stock_graph.set_title('Daily Charts of Major NASDAQ Tech Stocks Over the Past Year', fontsize=16)
     stock_graph.set_xlabel('Date', fontsize=14)
     stock_graph.set_ylabel('Price (USD)', fontsize=14)
 
     plt.show()
+
+
 
 
